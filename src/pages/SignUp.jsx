@@ -1,14 +1,31 @@
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, Form, Formik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
+import '../globals.css'
+import { account } from '@/appwrite/config'
+import { ID } from 'appwrite'
+
 
 const SignUp = () => {
+  const [loading, setLoading] = useState(false);
+
     const onSubmit = async (data) => {
-        
+        try {
+            const result = await account.create(
+                ID.unique(),
+                data?.email,
+                data?.password,
+                data?.name
+              );
+        } catch (error) {
+            console.log(error);
+        }
     }
   return (
-        <div>
-             <h1 className="text-center mb-4 text-xl font-bold">Sign Up</h1>
+        <div className="flex flex-col bg-img  justify-center items-center h-screen ">
+            <div className="w-[320px] sm:w-[400px]  shadow-lg p-8 rounded-xl ">
+             <h1 className="text-center mb-4 text-xl font-bold text-white">Sign Up</h1>
              <Formik
           initialValues={{ name: "", email: "", password: "" }}
           onSubmit={onSubmit}
@@ -28,6 +45,7 @@ const SignUp = () => {
             </Button>
           </Form>
         </Formik>
+        </div>
         </div>
   )
 }

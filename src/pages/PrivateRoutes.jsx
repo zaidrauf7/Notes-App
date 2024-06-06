@@ -9,7 +9,7 @@ const PrivateRoutes = () => {
         <Outlet/>
     </Layout>
  ):
- (<Navigate to={"/"}/>)
+ (<Navigate to={"/signup"}/>)
 }
 
 export default PrivateRoutes
