@@ -1,9 +1,12 @@
 import React from 'react'
 import Layout from './Layout'
 import { Navigate, Outlet } from 'react-router-dom'
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 const PrivateRoutes = () => {
- const user = false
+  const { getItem } = useLocalStorage();
+
+ const user = getItem("user")
  return user ? (
     <Layout >
         <Outlet/>

@@ -1,13 +1,19 @@
 import React from 'react'
-import { Button } from './components/ui/button'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SignUp from './pages/SignUp'
+import Login from './pages/Login'
+import PrivateRoutes from './pages/PrivateRoutes'
+import Home from './components/Home'
 
 const App = () => {
   return (
   <BrowserRouter>
   <Routes>
-  <Route path='/signup' element={<SignUp/>} />
+ <Route element={<PrivateRoutes/>}>
+  <Route path='/' element={<Home/>}/>
+ </Route>
+ <Route path='/signup' element={<SignUp/>} />
+  <Route path='/login' element={<Login/>} />
   </Routes>
   </BrowserRouter>
   )
