@@ -6,13 +6,13 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 const PrivateRoutes = () => {
   const { getItem } = useLocalStorage();
 
- const user = getItem("user")
+ const user = 66
  return user ? (
     <Layout >
         <Outlet/>
     </Layout>
  ):
- (<Navigate to={"/signup"}/>)
+ (<Navigate to={"/login"}/>)
 }
 
 export default PrivateRoutes

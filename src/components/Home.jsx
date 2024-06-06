@@ -1,8 +1,24 @@
 import React from 'react'
+import { Button } from './ui/button'
+import useLocalStorage from '@/hooks/useLocalStorage'
+import { useNavigate } from 'react-router-dom';
+import { account } from '@/appwrite/config';
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const { removeItem , getItem } = useLocalStorage();
+    const user = getItem("user");
+  
+    const onLogout = async () => {
+      await account.deleteSession("current");
+      removeItem("user");
+      navigate("/login");
+    };
   return (
-    <div>Home</div>
+    <div>
+        <button onChange={onLogout}>Logout</button>
+    </div>
   )
 }
 

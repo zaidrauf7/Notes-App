@@ -5,12 +5,18 @@ import React, { useState } from 'react'
 import '../globals.css'
 import { account } from '@/appwrite/config'
 import { ID } from 'appwrite'
+import { useToast } from '@/components/ui/use-toast'
+import { Loader2 } from 'lucide-react'
 
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
 
     const onSubmit = async (data) => {
+    setLoading(true);
+
         try {
             const result = await account.create(
                 ID.unique(),
@@ -18,7 +24,16 @@ const SignUp = () => {
                 data?.password,
                 data?.name
               );
+              setLoading(false);
+              toast({
+                variant: "success",
+                description: "Account created successfully.",
+              });
         } catch (error) {
+            toast({
+                variant: "destructive",
+                description: "Something went wrong.",
+              });
             console.log(error);
         }
     }
