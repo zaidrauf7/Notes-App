@@ -27,7 +27,7 @@ const Login = () => {
         setLoading(false);
               toast({
                 variant: "success",
-                description: "Account created successfully.",
+                description: "Login successfully.",
               });
               setTimeout(() => {
                 navigate("/");

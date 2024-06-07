@@ -31,14 +31,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, useNavigate } from "react-router-dom";
+import { FaRegNoteSticky } from "react-icons/fa6";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { account, db } from "@/appwrite/config";
-import { getUsers } from "@/appwrite/appwriteUtils";
+import { account } from "@/appwrite/config";
+import { IoMdAddCircle } from "react-icons/io";
+import { CgNotes } from "react-icons/cg";
+import { FaRegTrashAlt } from "react-icons/fa";
 
-const Layout = ({ children  }) => {
+const Layout = ({ children }) => {
   const navigate = useNavigate();
 
-  const { removeItem , getItem } = useLocalStorage();
+  const { removeItem, getItem } = useLocalStorage();
   const user = getItem("cookieFallback");
 
   const onLogout = async () => {
@@ -46,21 +49,20 @@ const Layout = ({ children  }) => {
     removeItem("user");
     navigate("/login");
   };
- 
-  
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Package2 className="h-6 w-6" />
-              <span className="">TICKETS</span>
+            <FaRegNoteSticky />
+              <span className="">Notes App</span>
             </Link>
-            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-              <Bell className="h-4 w-4" />
+            <Link   className="ml-auto bg-gray-800 flex items-center justify-center rounded-md h-8 w-8">
+            <IoMdAddCircle />
               <span className="sr-only">Toggle notifications</span>
-            </Button>
+            </Link>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -68,46 +70,21 @@ const Layout = ({ children  }) => {
                 to={"/"}
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                <Home className="h-4 w-4" />
-                Dashboard
+                <CgNotes />
+                All Notes
               </Link>
               <Link
-                to={"/projects"}
+                to={"/"}
                 href="#"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                <ShoppingCart className="h-4 w-4" />
-                Projects
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  {storeData.length}
-                </Badge>
+                <FaRegTrashAlt />
+                Trash
+                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">1</Badge>
               </Link>
-              <Link
-                to={"/tickets"}
-
-                href="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <Package className="h-4 w-4" />
-                Tickets{" "}
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  {storeData1.length}
-                </Badge>
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <Users className="h-4 w-4" />
-                Customers
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <LineChart className="h-4 w-4" />
-                Analytics
-              </Link>
+             
+             
+              
             </nav>
           </div>
         </div>
@@ -138,15 +115,15 @@ const Layout = ({ children  }) => {
                   href="#"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
-                  <Home className="h-5 w-5" />
-                  Dashboard
+                   <CgNotes />
+                All Notes
                 </Link>
                 <Link
                   href="#"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
+                  <FaRegTrashAlt />
+                Trash
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                     6
                   </Badge>
@@ -194,18 +171,16 @@ const Layout = ({ children  }) => {
           <div className="w-full flex-1">
             <form>
               <div className="relative">
-                <Search  className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                
                   type="search"
                   placeholder="Search products..."
                   className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-                  
                 />
               </div>
             </form>
           </div>
-            <h2>{user?.name}</h2>
+          <h2>{user?.name}</h2>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
