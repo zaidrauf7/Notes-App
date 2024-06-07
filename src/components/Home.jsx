@@ -8,7 +8,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     const { removeItem , getItem } = useLocalStorage();
-    const user = getItem("user");
+    const user = getItem("cookieFallback");
   
     const onLogout = async () => {
       await account.deleteSession("current");
@@ -17,7 +17,7 @@ const Home = () => {
     };
   return (
     <div>
-        <button onChange={onLogout}>Logout</button>
+        <button onClick={onLogout}>Logout</button>
     </div>
   )
 }
