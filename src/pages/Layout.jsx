@@ -34,9 +34,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaRegNoteSticky } from "react-icons/fa6";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { account } from "@/appwrite/config";
-import { IoMdAddCircle } from "react-icons/io";
+import { MdOutlineAddTask } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { MdOutlineNoteAdd } from "react-icons/md";
+import { RiHome3Line } from "react-icons/ri";
+import { HiOutlineTrash } from "react-icons/hi2";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -49,6 +52,7 @@ const Layout = ({ children }) => {
     removeItem("user");
     navigate("/login");
   };
+  
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -56,35 +60,56 @@ const Layout = ({ children }) => {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-            <FaRegNoteSticky />
-              <span className="">Notes App</span>
-            </Link>
-            <Link   className="ml-auto bg-gray-800 flex items-center justify-center rounded-md h-8 w-8">
-            <IoMdAddCircle />
-              <span className="sr-only">Toggle notifications</span>
+              <FaRegNoteSticky />
+              <span className="">My Notes</span>
             </Link>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              <div className="flex gap-4 mt-2 flex-wrap md:flex-nowrap">
+                <Link
+                  to={"/notes"}
+                  className=" bg-green-600 w-full flex items-center justify-center rounded-md px-10 py-3"
+                >
+                  <MdOutlineNoteAdd />
+                  <h2 className="pl-2">Add Notes</h2>
+                  <span className="sr-only">Toggle notifications</span>
+                </Link>
+                {/* <Link className=" bg-purple-600 flex items-center justify-center rounded-md px-6 py-2">
+                  <MdOutlineAddTask />
+                  <h2 className="pl-2">Task</h2>
+                  <span className="sr-only">Toggle notifications</span>
+                </Link> */}
+              </div>
               <Link
                 to={"/"}
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                className="flex items-center gap-3 mt-10 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                <CgNotes />
-                All Notes
+                <RiHome3Line className="text-xl" />
+                Home
               </Link>
               <Link
-                to={"/"}
+                to={"/notes"}
                 href="#"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-                <FaRegTrashAlt />
-                Trash
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">1</Badge>
+                <CgNotes className="text-xl" />
+                Notes
+                {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                  1
+                </Badge> */}
               </Link>
-             
-             
-              
+              <Link
+                to={"/trash"}
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <HiOutlineTrash className="text-xl" />
+                Trash
+                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                  1
+                </Badge>
+              </Link>
             </nav>
           </div>
         </div>
@@ -115,15 +140,15 @@ const Layout = ({ children }) => {
                   href="#"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                 >
-                   <CgNotes />
-                All Notes
+                  <CgNotes />
+                  All Notes
                 </Link>
                 <Link
                   href="#"
                   className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
                 >
                   <FaRegTrashAlt />
-                Trash
+                  Trash
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                     6
                   </Badge>
@@ -168,8 +193,8 @@ const Layout = ({ children }) => {
               </div>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
-            <form>
+          <div className="w-full flex justify-center">
+            {/* <form>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -178,7 +203,8 @@ const Layout = ({ children }) => {
                   className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
                 />
               </div>
-            </form>
+            </form> */}
+            {/* <h1>Capture, Organize, Discover</h1>   */}
           </div>
           <h2>{user?.name}</h2>
           <DropdownMenu>
@@ -196,10 +222,7 @@ const Layout = ({ children }) => {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link>
-                {" "}
-                <DropdownMenuItem onClick={onLogout}>Logout</DropdownMenuItem>
-              </Link>
+              <DropdownMenuItem onClick={onLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
