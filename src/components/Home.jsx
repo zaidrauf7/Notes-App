@@ -35,7 +35,10 @@ const Home = () => {
         [Query.equal("userId", user?.$id), Query.equal("trashed", false)]
       );
 
-      setStoreData1(result.documents);
+      // Sort results by updatedAt in descending order
+      const sortedResults = result.documents.sort((a, b) => new Date(b.$updatedAt) - new Date(a.$updatedAt));
+
+      setStoreData1(sortedResults);
     } catch (err) {
       console.error(err);
     }
@@ -45,13 +48,25 @@ const Home = () => {
     try {
       const user = await account.get();
 
-      const result = await db.listDocuments(
+      const result1 = await db.listDocuments(
         "666305ca001c5404a618", // Database ID
-        "666305dd00255a0776a7",
-        [Query.equal("userId", user?.$id), Query.contains("content"|| "tags" ,  query) ]
+        "666305dd00255a0776a7", // Collection ID
+        [Query.equal("userId", user?.$id), Query.contains("content", query)]
       );
 
-      setStoreData1(result.documents);
+      const result2 = await db.listDocuments(
+        "666305ca001c5404a618", // Database ID
+        "666305dd00255a0776a7", // Collection ID
+        [Query.equal("userId", user?.$id), Query.contains("tags", query)]
+      );
+
+      // Combine results, avoiding duplicates
+      const combinedResults = [...new Map([...result1.documents, ...result2.documents].map(item => [item.$id, item])).values()];
+
+      // Sort combined results by updatedAt in descending order
+      const sortedResults = combinedResults.sort((a, b) => new Date(b.$updatedAt) - new Date(a.$updatedAt));
+
+      setStoreData1(sortedResults);
     } catch (err) {
       console.error(err);
     }
@@ -84,7 +99,6 @@ const Home = () => {
       console.error("Failed to move note to trash:", err);
     }
   };
-  // console.log(storeData1.tags);
 
   return (
     <div className="">
@@ -97,28 +111,39 @@ const Home = () => {
       <div>
         <h2>Notes</h2>
       </div>
-      <div className="flex flex-wrap   gap-3">
+      <div className="flex flex-wrap gap-3">
+        <Link to="/notes">
+          <div className="w-[200px] h-[300px] mt-10 bg-gray-800 hover:bg-gray-700 flex-col rounded-md flex justify-center items-center">
+            <div className="w-20 h-20 rounded-full bg-green-600 flex justify-center items-center text-black text-4xl">
+              <RiStickyNoteAddFill />
+            </div>
+            <h1 className="font-medium text-lg mt-2">Create New Notes</h1>
+          </div>
+        </Link>
         {storeData1.length > 0 ? (
           storeData1.map((val, index) => (
-            // console.log(val.tags);
             <div
               onClick={() => {
                 setOpen(true);
                 setCurrentNote(val?.$id);
               }}
               key={val.$id}
-              className={`w-[200px] h-[300px] relative mt-10 ${colors[index % colors.length]} bg-opacity-60 hover:bg-opacity-100 cursor-pointer flex-col rounded-md flex p-2`}
+              className={`w-[210px] h-[300px] relative mt-10 ${colors[index % colors.length]} bg-opacity-60 hover:bg-opacity-100 cursor-pointer flex-col rounded-md flex p-2`}
             >
               <div
-                className=""
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(val.content),
                 }}
               />
-              <div className="absolute  bottom-2 bg-gray-500 rounded-md text-xs p-1 left-2">
-                {val.tags}
+              <div className="absolute bottom-8 flex gap-1 text-xs left-2">
+                {val.tags.slice(0, 2).map((tag, index) => (
+                  <h1 key={index} className="bg-gray-700 text-white p-1 rounded-md">{tag}</h1>
+                ))}
+                {val.tags.length > 2 && (
+                  <h1 className="text-white p-1 rounded-md">+{val.tags.length - 2}</h1>
+                )}
               </div>
-              <div className="text-gray-400 text-xs mt-2 absolute bottom-2 right-10">
+              <div className="text-gray-100 text-xs mt-2 absolute bottom-2 left-2">
                 {val.$updatedAt.slice(0, 10)}
               </div>
               <HiOutlineTrash
@@ -135,14 +160,6 @@ const Home = () => {
             No notes found.
           </div>
         )}
-        <Link to="/notes">
-          <div className="w-[200px] h-[300px] mt-10 bg-gray-800 hover:bg-gray-700 flex-col rounded-md flex justify-center items-center">
-            <div className="w-20 h-20 rounded-full bg-green-600 flex justify-center items-center text-black text-4xl">
-              <RiStickyNoteAddFill />
-            </div>
-            <h1 className="font-medium text-lg mt-2">Create New Notes</h1>
-          </div>
-        </Link>
       </div>
       <UpdateNote
         dbResult1={dbResult1}
