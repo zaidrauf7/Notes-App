@@ -36,7 +36,9 @@ const Home = () => {
       );
 
       // Sort results by updatedAt in descending order
-      const sortedResults = result.documents.sort((a, b) => new Date(b.$updatedAt) - new Date(a.$updatedAt));
+      const sortedResults = result.documents.sort(
+        (a, b) => new Date(b.$updatedAt) - new Date(a.$updatedAt)
+      );
 
       setStoreData1(sortedResults);
     } catch (err) {
@@ -61,12 +63,18 @@ const Home = () => {
       );
 
       // Combine results, avoiding duplicates
-      const combinedResults = [...new Map([...result1.documents, ...result2.documents].map(item => [item.$id, item])).values()];
+      const combinedResults = [
+        ...new Map(
+          [...result1.documents, ...result2.documents].map((item) => [
+            item.$id,
+            item,
+          ])
+        ).values(),
+      ];
 
       // Sort combined results by updatedAt in descending order
-      const sortedResults = combinedResults.sort((a, b) => new Date(b.$updatedAt) - new Date(a.$updatedAt));
 
-      setStoreData1(sortedResults);
+      setStoreData1(combinedResults);
     } catch (err) {
       console.error(err);
     }
@@ -128,7 +136,9 @@ const Home = () => {
                 setCurrentNote(val?.$id);
               }}
               key={val.$id}
-              className={`w-[210px] h-[300px] relative mt-10 ${colors[index % colors.length]} bg-opacity-60 hover:bg-opacity-100 cursor-pointer flex-col rounded-md flex p-2`}
+              className={`w-[210px] h-[300px] relative mt-10 ${
+                colors[index % colors.length]
+              } bg-opacity-60 hover:bg-opacity-100 cursor-pointer flex-col rounded-md flex p-2`}
             >
               <div
                 dangerouslySetInnerHTML={{
@@ -137,10 +147,17 @@ const Home = () => {
               />
               <div className="absolute bottom-8 flex gap-1 text-xs left-2">
                 {val.tags.slice(0, 2).map((tag, index) => (
-                  <h1 key={index} className="bg-gray-700 text-white p-1 rounded-md">{tag}</h1>
+                  <h1
+                    key={index}
+                    className="bg-gray-700 text-white p-1 rounded-md"
+                  >
+                    {tag}
+                  </h1>
                 ))}
                 {val.tags.length > 2 && (
-                  <h1 className="text-white p-1 rounded-md">+{val.tags.length - 2}</h1>
+                  <h1 className="text-white p-1 rounded-md">
+                    +{val.tags.length - 2}
+                  </h1>
                 )}
               </div>
               <div className="text-gray-100 text-xs mt-2 absolute bottom-2 left-2">

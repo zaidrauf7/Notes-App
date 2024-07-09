@@ -30,7 +30,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { FaRegNoteSticky } from "react-icons/fa6";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { account } from "@/appwrite/config";
@@ -40,6 +45,23 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineNoteAdd } from "react-icons/md";
 import { RiHome3Line } from "react-icons/ri";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { FaTags } from "react-icons/fa";
+
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -52,7 +74,31 @@ const Layout = ({ children }) => {
     removeItem("user");
     navigate("/login");
   };
-  
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
+
+  const frameworks = [
+    {
+      value: "next.js",
+      label: "Next.js",
+    },
+    {
+      value: "sveltekit",
+      label: "SvelteKit",
+    },
+    {
+      value: "nuxt.js",
+      label: "Nuxt.js",
+    },
+    {
+      value: "remix",
+      label: "Remix",
+    },
+    {
+      value: "astro",
+      label: "Astro",
+    },
+  ];
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -89,6 +135,13 @@ const Layout = ({ children }) => {
                 Home
               </Link>
               <Link
+                to={"?tag=hello"}
+                className="flex items-center gap-3 mt-10 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <RiHome3Line className="text-xl" />
+                Home 2
+              </Link>
+              <Link
                 to={"/notes"}
                 href="#"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -109,6 +162,60 @@ const Layout = ({ children }) => {
                 <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                   1
                 </Badge>
+              </Link>
+              <Link
+                to={"/tags"}
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              >
+                <FaTags className="text-xl" />
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-[200px] justify-between"
+                    >
+                      {value
+                        ? frameworks.find(
+                            (framework) => framework.value === value
+                          )?.label
+                        : "Tags"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search framework..." />
+                      <CommandEmpty>No tags found.</CommandEmpty>
+                      <CommandGroup>
+                        {frameworks.map((framework) => (
+                          <CommandItem
+                            key={framework.value}
+                            value={framework.value}
+                            onSelect={(currentValue) => {
+                              setValue(
+                                currentValue === value ? "" : currentValue
+                              );
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === framework.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {framework.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </Link>
             </nav>
           </div>
